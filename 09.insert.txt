@@ -1,0 +1,51 @@
+INSERT INTO Users (full_name, email, phone, password, user_status)
+VALUES ('Pooja Sharma', 'pooja@example.com', '9876543210', 'secure123', 'Active');
+
+INSERT INTO Rooms (room_number, room_type, price_per_night, room_status)
+VALUES ('101', 'Deluxe', 2500, 'Available');
+
+INSERT INTO Rooms (room_number, room_type, price_per_night, room_status)
+VALUES ('102', 'Suite', 4000, 'Available');
+
+
+
+
+
+
+------------insert procedure --
+
+BEGIN
+    book_room(
+        p_user_id => 1001,
+        p_room_id => 2002,
+        p_check_in => TO_DATE('08-AUG-2025','DD-MON-YYYY'),
+        p_check_out => TO_DATE('11-AUG-2025','DD-MON-YYYY'),
+        p_payment_method => 'UPI'
+    );
+END;
+/
+
+
+-----  Step 2: Verify the Data
+
+✅ Check Bookings
+
+SELECT b.booking_id, u.full_name, r.room_number, b.check_in, b.check_out, b.booking_status
+FROM Bookings b
+JOIN Users u ON b.user_id = u.user_id
+JOIN Rooms r ON b.room_id = r.room_id
+ORDER BY b.booking_id DESC;
+
+✅ Check Payments
+
+SELECT p.payment_id, b.booking_id, u.full_name, p.amount, p.payment_method, p.payment_status
+FROM Payments p
+JOIN Bookings b ON p.booking_id = b.booking_id
+JOIN Users u ON b.user_id = u.user_id
+ORDER BY p.payment_id DESC;
+
+✅ Check Room Status
+
+SELECT room_id, room_number, room_status
+FROM Rooms
+WHERE room_id = 2001;

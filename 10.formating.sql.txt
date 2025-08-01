@@ -1,0 +1,33 @@
+-- ========== USERS TABLE ==========
+COLUMN user_id       FORMAT 9999       HEADING "User ID"
+COLUMN full_name     FORMAT A20        HEADING "Full Name"
+COLUMN email         FORMAT A30        HEADING "Email"
+COLUMN phone         FORMAT A15        HEADING "Phone"
+COLUMN password      FORMAT A15        HEADING "Password"
+COLUMN user_status   FORMAT A10        HEADING "Status"
+
+-- ========== ROOMS TABLE ==========
+COLUMN room_id       FORMAT 9999       HEADING "Room ID"
+COLUMN room_number   FORMAT A10        HEADING "Room No"
+COLUMN room_type     FORMAT A15        HEADING "Room Type"
+COLUMN price_per_night FORMAT 99999.99 HEADING "Price/Night"
+COLUMN room_status   FORMAT A12        HEADING "Status"
+
+-- ========== BOOKINGS TABLE ==========
+COLUMN booking_id     FORMAT 9999      HEADING "Booking ID"
+COLUMN user_id        FORMAT 9999      HEADING "User ID"
+COLUMN room_id        FORMAT 9999      HEADING "Room ID"
+COLUMN check_in       FORMAT A12       HEADING "Check-In"
+COLUMN check_out      FORMAT A12       HEADING "Check-Out"
+COLUMN booking_status FORMAT A12       HEADING "Status"
+
+-- ========== PAYMENTS TABLE ==========
+COLUMN payment_id     FORMAT 9999      HEADING "Payment ID"
+COLUMN booking_id     FORMAT 9999      HEADING "Booking ID"
+COLUMN amount         FORMAT 99999.99  HEADING "Amount"
+COLUMN payment_date   FORMAT A15       HEADING "Pay Date"
+COLUMN payment_method FORMAT A12       HEADING "Method"
+COLUMN payment_status FORMAT A12       HEADING "Status"
+
+-- Confirmation message
+PROMPT Formatting applied successfully!

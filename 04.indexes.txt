@@ -1,0 +1,3 @@
+CREATE INDEX idx_users_email ON Users(email);
+CREATE INDEX idx_bookings_userid ON Bookings(user_id);
+CREATE INDEX idx_rooms_status ON Rooms(room_status);

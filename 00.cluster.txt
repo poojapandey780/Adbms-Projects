@@ -1,0 +1,13 @@
+Step 1: ***************  Create Cluster for Users & Bookings and  
+
+CREATE CLUSTER user_booking_cluster (
+    user_id NUMBER
+)
+SIZE 1024
+TABLESPACE USERS;
+
+**************  AND ALSO CREATE INDEX FOR THIS CLUSTER
+
+CREATE INDEX idx_user_booking_cluster
+ON CLUSTER user_booking_cluster
+TABLESPACE USERS;

@@ -1,0 +1,15 @@
+CREATE OR REPLACE VIEW Booking_Summary AS
+SELECT 
+    b.booking_id,
+    u.full_name AS customer_name,
+    r.room_number,
+    r.room_type,
+    b.check_in,
+    b.check_out,
+    b.booking_status,
+    p.amount,
+    p.payment_status
+FROM Bookings b
+JOIN Users u ON b.user_id = u.user_id
+JOIN Rooms r ON b.room_id = r.room_id
+LEFT JOIN Payments p ON b.booking_id = p.booking_id;

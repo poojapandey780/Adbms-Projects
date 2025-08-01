@@ -1,0 +1,66 @@
+-- AUTO-ID Triggers
+CREATE OR REPLACE TRIGGER trg_customer_id
+BEFORE INSERT ON Users
+FOR EACH ROW
+BEGIN
+    :NEW.user_id := Users_Seq.NEXTVAL;
+END;
+/
+
+
+
+CREATE OR REPLACE TRIGGER trg_room_id
+BEFORE INSERT ON Rooms
+FOR EACH ROW
+BEGIN
+    :NEW.room_id := Rooms_Seq.NEXTVAL;
+END;
+/
+
+
+
+CREATE OR REPLACE TRIGGER trg_booking_id
+BEFORE INSERT ON Bookings
+FOR EACH ROW
+BEGIN
+    :NEW.booking_id := Bookings_Seq.NEXTVAL;
+END;
+/
+
+
+
+CREATE OR REPLACE TRIGGER trg_payment_id
+BEFORE INSERT ON Payments
+FOR EACH ROW
+BEGIN
+    :NEW.payment_id := Payments_Seq.NEXTVAL;
+END;
+/
+
+
+
+-- VALIDATION: Check-out > Check-in
+
+CREATE OR REPLACE TRIGGER trg_check_booking_dates
+BEFORE INSERT OR UPDATE ON Bookings
+FOR EACH ROW
+BEGIN
+    IF :NEW.check_out <= :NEW.check_in THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Check-out date must be after check-in date.');
+    END IF;
+END;
+/
+
+
+
+-- UPDATE Room status automatically
+
+CREATE OR REPLACE TRIGGER trg_update_room_status
+AFTER INSERT ON Bookings
+FOR EACH ROW
+BEGIN
+    UPDATE Rooms
+    SET room_status = 'Booked'
+    WHERE room_id = :NEW.room_id;
+END;
+/

@@ -1,0 +1,59 @@
+CREATE OR REPLACE PROCEDURE book_room (
+    p_user_id IN NUMBER,
+    p_room_id IN NUMBER,
+    p_check_in IN DATE,
+    p_check_out IN DATE,
+    p_payment_method IN VARCHAR2
+) AS
+    v_booking_id NUMBER;
+    v_price NUMBER;
+    v_days NUMBER;
+    v_amount NUMBER;
+    v_count NUMBER;
+BEGIN
+    -- Check if room is already booked for overlapping dates
+    SELECT COUNT(*) INTO v_count
+    FROM Bookings
+    WHERE room_id = p_room_id
+      AND booking_status = 'Confirmed'
+      AND (
+            (p_check_in BETWEEN check_in AND check_out)
+         OR (p_check_out BETWEEN check_in AND check_out)
+         OR (p_check_in <= check_in AND p_check_out >= check_out)
+          );
+
+    IF v_count > 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Room is already booked for the given dates!');
+    END IF;
+
+    -- Get price of the room
+    SELECT price_per_night INTO v_price
+    FROM Rooms
+    WHERE room_id = p_room_id;
+
+    -- Calculate number of days (Check-out date not included)
+    v_days := p_check_out - p_check_in;
+
+    IF v_days <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20004, 'Invalid stay duration. Check-out must be after check-in.');
+    END IF;
+
+    -- Calculate amount
+    v_amount := v_price * v_days;
+
+    -- Insert Booking
+    INSERT INTO Bookings (user_id, room_id, check_in, check_out, booking_status)
+    VALUES (p_user_id, p_room_id, p_check_in, p_check_out, 'Confirmed')
+    RETURNING booking_id INTO v_booking_id;
+
+    -- Insert Payment
+    INSERT INTO Payments (booking_id, amount, payment_method, payment_status)
+    VALUES (v_booking_id, v_amount, p_payment_method, 'Success');
+
+    -- Update Room Status
+    UPDATE Rooms SET room_status = 'Booked' WHERE room_id = p_room_id;
+
+    DBMS_OUTPUT.PUT_LINE('Room booked successfully. Booking ID: ' || v_booking_id ||
+                         ' | Total Amount: ' || v_amount);
+END;
+/

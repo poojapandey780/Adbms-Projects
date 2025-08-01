@@ -1,0 +1,54 @@
+******** create user table and booking table in cluster ******** 
+
+CREATE TABLE users (
+    user_id NUMBER PRIMARY KEY,
+    full_name VARCHAR2(100) NOT NULL,
+    email VARCHAR2(150) UNIQUE NOT NULL,
+    phone VARCHAR2(15),
+    password VARCHAR2(100) NOT NULL,
+    user_status VARCHAR2(20) CHECK (user_status IN ('Active', 'Inactive'))
+)
+CLUSTER user_booking_cluster (user_id);
+
+------------------------- ---------------------------
+
+-- ROOMS TABLE
+
+CREATE TABLE Rooms (
+    room_id NUMBER PRIMARY KEY,
+    room_number VARCHAR2(20) UNIQUE NOT NULL,
+    room_type VARCHAR2(50),
+    price_per_night NUMBER(10,2) NOT NULL,
+    room_status VARCHAR2(20) CHECK (room_status IN ('Available', 'Booked', 'Maintenance'))
+)
+TABLESPACE USERS;
+
+------------------------  ------------------------
+
+-- BOOKINGS TABLE
+
+CREATE TABLE Bookings (
+    booking_id NUMBER PRIMARY KEY,
+    user_id NUMBER REFERENCES Users(user_id),
+    room_id NUMBER,
+    check_in DATE NOT NULL,
+    check_out DATE NOT NULL,
+    booking_status VARCHAR2(20) CHECK (booking_status IN ('Confirmed', 'Cancelled', 'Completed'))
+)
+CLUSTER user_booking_cluster (user_id);
+  
+---------------------- ------------------------------------
+
+-- PAYMENTS TABLE
+
+CREATE TABLE Payments (
+    payment_id NUMBER PRIMARY KEY,
+    booking_id NUMBER REFERENCES Bookings(booking_id),
+    amount NUMBER(10,2) NOT NULL,
+    payment_date DATE DEFAULT SYSDATE,
+    payment_method VARCHAR2(20) CHECK (payment_method IN ('CreditCard', 'DebitCard', 'UPI', 'Cash')),
+    payment_status VARCHAR2(20) CHECK (payment_status IN ('Success', 'Pending', 'Failed'))
+)
+TABLESPACE USERS;
+
+insert into Customer(full_name,email,phone,password,user_status) values('poonam','poonam@gmail.com','8672686754','12345678','Inactive');

@@ -1,0 +1,29 @@
+---- booking data fetch karne ke liye - -----
+
+DECLARE
+    c SYS_REFCURSOR;
+    v_booking_id NUMBER;
+    v_check_in DATE;
+    v_check_out DATE;
+    v_status VARCHAR2(20);
+    v_room_number VARCHAR2(20);
+BEGIN
+    OPEN c FOR
+    SELECT b.booking_id, b.check_in, b.check_out, b.booking_status, r.room_number
+    FROM Bookings b
+    JOIN Rooms r ON b.room_id = r.room_id
+    WHERE b.user_id = 1001;
+
+    LOOP
+        FETCH c INTO v_booking_id, v_check_in, v_check_out, v_status, v_room_number;
+        EXIT WHEN c%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('Booking: ' || v_booking_id || 
+                             ' | Room: ' || v_room_number ||
+                             ' | From: ' || v_check_in || 
+                             ' To: ' || v_check_out || 
+                             ' | Status: ' || v_status);
+    END LOOP;
+
+    CLOSE c;
+END;
+/

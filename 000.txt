@@ -1,0 +1,11 @@
+Cluster → Fast join for Users + Bookings
+
+Indexes → Speedy search by email, user, status
+
+Function → Available rooms check
+
+Cursor → Fetch multiple bookings
+
+View → Report-friendly booking summary
+
+Procedure → Room booking with payment automation

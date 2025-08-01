@@ -1,0 +1,19 @@
+CREATE OR REPLACE FUNCTION get_available_rooms(p_check_in DATE, p_check_out DATE)
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4      result_cursor SYS_REFCURSOR;
+  5  BEGIN
+  6      OPEN result_cursor FOR
+  7      SELECT r.room_id, r.room_number, r.room_type, r.price_per_night
+  8      FROM Rooms r
+  9      WHERE r.room_status = 'Available'
+ 10      AND NOT EXISTS (
+ 11          SELECT 1 FROM Bookings b
+ 12          WHERE b.room_id = r.room_id
+ 13          AND (p_check_in BETWEEN b.check_in AND b.check_out
+ 14           OR p_check_out BETWEEN b.check_in AND b.check_out)
+ 15      );
+ 16      RETURN result_cursor;
+ 17  END;
+ 18  /
+
